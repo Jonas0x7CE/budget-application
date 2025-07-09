@@ -1,9 +1,7 @@
-﻿@implements IDisposable
-@rendermode InteractiveServer
+﻿@rendermode InteractiveServer
 
 @inject NavigationManager NavigationManager
-
-<div class="border-b border-b-zinc-300 bg-zinc-900 flex">
+<div class="border-b border-b-white/10 sm:border-b-0 bg-zinc-900 flex justify-between items-center">
     <button @onclick="ToggleMenu" data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar"
             aria-controls="default-sidebar" type="button"
             class="inline-flex items-center p-3 text-sm text-zinc-500 rounded-lg sm:hidden hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-200 text-zinc-400 hover:bg-zinc-700 focus:ring-zinc-600">
@@ -21,7 +19,7 @@
 </div>
 
 <aside id="default-sidebar"
-       class="fixed top-0 left-0 z-20 w-full sm:w-64 h-screen transition-transform @(showMenu ? "" : "-translate-x-full") sm:translate-x-0"
+       class="fixed top-0 left-0 z-20 w-full sm:w-64 h-screen transition-transform border-r border-r-white/10 @(showMenu ? "" : "-translate-x-full") sm:translate-x-0"
        aria-label="Sidebar">
     <div class="flex h-full">
         <div class="relative h-full px-3 py-4 overflow-y-auto w-64 bg-zinc-900">
@@ -33,7 +31,7 @@
                                 <li>
                                     <NavLink href="counter"
                                              class="flex items-center p-2 rounded-lg text-white hover:bg-zinc-700 text-decoration-none group [&.active]:bg-zinc-700">
-                                        <span class="ms-3" aria-hidden="true"></span> Afdelinger
+                                        <span class="ms-3" aria-hidden="true"></span> Counter
                                     </NavLink>
                                 </li>
                             </ul>
@@ -75,8 +73,6 @@
                 </NotAuthorized>
             </AuthorizeView>
         </div>
-        <div @onclick="ToggleMenu" class="grow sm:hidden">
-        </div>
     </div>
 </aside>
 
@@ -101,12 +97,7 @@
         StateHasChanged();
     }
 
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= OnLocationChanged;
-    }
-
-    public void ToggleMenu()
+    private void ToggleMenu()
     {
         showMenu = !showMenu;
     }

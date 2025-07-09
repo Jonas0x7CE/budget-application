@@ -294,11 +294,15 @@ styles.css
 styles.css.map
 index.js
 index.js.map
+app.min.css
 
 # Ignore configs
 appsettings.Development.json
 
 # sqlite db
+budget.db
+budget.db-shm
+budget.db-wal
 app.db
 app.db-shm
 app.db-wal
