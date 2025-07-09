@@ -1,0 +1,114 @@
+﻿@implements IDisposable
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+
+<div class="border-b border-b-zinc-300 bg-zinc-900 flex">
+    <button @onclick="ToggleMenu" data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar"
+            aria-controls="default-sidebar" type="button"
+            class="inline-flex items-center p-3 text-sm text-zinc-500 rounded-lg sm:hidden hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-200 text-zinc-400 hover:bg-zinc-700 focus:ring-zinc-600">
+        <span class="sr-only">Open sidebar</span>
+        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+             xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd" fill-rule="evenodd"
+                  d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+        </svg>
+    </button>
+</div>
+
+<div class="bg-black @(showMenu ? "!opacity-50 top-0 right-0 bottom-0 left-0" : "") opacity-0 transition ease-in-out duration-200 fixed h-full">
+
+</div>
+
+<aside id="default-sidebar"
+       class="fixed top-0 left-0 z-20 w-full sm:w-64 h-screen transition-transform @(showMenu ? "" : "-translate-x-full") sm:translate-x-0"
+       aria-label="Sidebar">
+    <div class="flex h-full">
+        <div class="relative h-full px-3 py-4 overflow-y-auto w-64 bg-zinc-900">
+            <AuthorizeView>
+                <Authorized>
+                    <div class="flex flex-col justify-between h-full">
+                        <div>
+                            <ul class="!pl-0 space-y-2 font-medium">
+                                <li>
+                                    <NavLink href="counter"
+                                             class="flex items-center p-2 rounded-lg text-white hover:bg-zinc-700 text-decoration-none group [&.active]:bg-zinc-700">
+                                        <span class="ms-3" aria-hidden="true"></span> Afdelinger
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <ul class="!pl-0 space-y-2 font-medium">
+                                <li>
+                                    <form action="Account/Logout" method="post">
+                                        <AntiforgeryToken/>
+                                        <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
+                                        <div class="cursor-pointer flex items-center p-2 rounded-lg text-white hover:bg-zinc-700 text-decoration-none group [&.active]:bg-zinc-700">
+                                            <button type="submit" class="ms-3">
+                                                <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                                            </button>
+                                        </div>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <ul class="!pl-0 space-y-2 font-medium">
+                        <li>
+                            <NavLink
+                                class="flex items-center p-2 rounded-lg text-white hover:bg-zinc-700 text-decoration-none group [&.active]:bg-zinc-700"
+                                href="Account/Register">
+                                <span class="ms-3" aria-hidden="true"></span> Register
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                class="flex items-center p-2 rounded-lg text-white hover:bg-zinc-700 text-decoration-none group [&.active]:bg-zinc-700"
+                                href="Account/Login">
+                                <span class="ms-3" aria-hidden="true"></span> Login
+                            </NavLink>
+                        </li>
+                    </ul>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+        <div @onclick="ToggleMenu" class="grow sm:hidden">
+        </div>
+    </div>
+</aside>
+
+@code {
+    private string? currentUrl;
+    private bool showMenu = false;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        if (showMenu)
+        {
+            ToggleMenu();
+        }
+
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    public void ToggleMenu()
+    {
+        showMenu = !showMenu;
+    }
+
+}

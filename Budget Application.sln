@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApplication", "BudgetApplication\BudgetApplication.csproj", "{82E7FE59-32EA-4BE8-B145-796739C1C301}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45FF017A-6F35-47BC-AA08-926C76FBB174}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppHost", "AppHost\AppHost.csproj", "{0C7C0DD8-DAB7-4710-AE48-68ED07C81A0D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82E7FE59-32EA-4BE8-B145-796739C1C301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82E7FE59-32EA-4BE8-B145-796739C1C301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82E7FE59-32EA-4BE8-B145-796739C1C301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82E7FE59-32EA-4BE8-B145-796739C1C301}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7C0DD8-DAB7-4710-AE48-68ED07C81A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7C0DD8-DAB7-4710-AE48-68ED07C81A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7C0DD8-DAB7-4710-AE48-68ED07C81A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7C0DD8-DAB7-4710-AE48-68ED07C81A0D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

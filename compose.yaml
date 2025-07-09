@@ -1,0 +1,7 @@
+﻿services:
+  budget applicationbudgetapplication:
+    image: budget applicationbudgetapplication
+    build:
+      context: .
+      dockerfile: Budget Application/Dockerfile
+
