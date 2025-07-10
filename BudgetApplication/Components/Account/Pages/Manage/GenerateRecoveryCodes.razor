@@ -10,33 +10,62 @@
 
 <PageTitle>Generate two-factor authentication (2FA) recovery codes</PageTitle>
 
-@if (recoveryCodes is not null)
-{
-    <ShowRecoveryCodes RecoveryCodes="recoveryCodes.ToArray()" StatusMessage="@message"/>
-}
-else
-{
-    <h3>Generate two-factor authentication (2FA) recovery codes</h3>
-    <div class="alert alert-warning" role="alert">
-        <p>
-            <span class="glyphicon glyphicon-warning-sign"></span>
-            <strong>Put these codes in a safe place.</strong>
-        </p>
-        <p>
-            If you lose your device and don't have the recovery codes you will lose access to your account.
-        </p>
-        <p>
-            Generating new recovery codes does not change the keys used in authenticator apps. If you wish to change the key
-            used in an authenticator app you should <a href="Account/Manage/ResetAuthenticator">reset your authenticator keys.</a>
-        </p>
+<div class="text-white">
+    <h1 class="font-semibold text-xl mb-4">Generate recovery codes</h1>
+    
+    <StatusMessage/>
+    
+    <div class="space-y-6">
+        <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-blue-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+                <div>
+                    <p class="text-sm font-medium text-blue-400">Important</p>
+                    <p class="text-sm text-blue-300">
+                        <strong>Put these codes in a safe place.</strong> If you lose your device and don't have the recovery codes 
+                        you will lose access to your account. Generating new recovery codes does not change the keys used 
+                        in authenticator apps. If you want to change the key used in an authenticator app you should 
+                        <a href="Account/Manage/ResetAuthenticator" class="underline text-blue-200 hover:text-blue-100">reset your authenticator keys</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-zinc-800 rounded-lg p-4 border border-zinc-600">
+            <h2 class="text-lg font-medium mb-3">Generate New Recovery Codes</h2>
+            <p class="text-sm text-zinc-300 mb-4">
+                Recovery codes can be used to access your account in the event you lose access to your device and cannot receive two-factor authentication codes.
+            </p>
+            
+            <EditForm Model="Input" FormName="generate-recovery-codes" OnValidSubmit="OnValidSubmitAsync" method="post">
+                <AntiforgeryToken/>
+                <button type="submit" class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium transition-colors">
+                    Generate Recovery Codes
+                </button>
+            </EditForm>
+        </div>
+
+        @if (recoveryCodes is not null)
+        {
+            <div class="bg-zinc-800 rounded-lg p-4 border border-zinc-600">
+                <h2 class="text-lg font-medium mb-3">Your Recovery Codes</h2>
+                <div class="bg-zinc-900 rounded-lg p-4 border border-zinc-700">
+                    <p class="text-sm text-zinc-300 mb-3">
+                        Store these recovery codes in a safe place. Each code can only be used once.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        @foreach (var recoveryCode in recoveryCodes)
+                        {
+                            <code class="block p-2 bg-zinc-800 rounded border border-zinc-600 text-sm font-mono text-zinc-100">@recoveryCode</code>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-    <div>
-        <form @formname="generate-recovery-codes" @onsubmit="OnSubmitAsync" method="post">
-            <AntiforgeryToken/>
-            <button class="btn btn-danger" type="submit">Generate Recovery Codes</button>
-        </form>
-    </div>
-}
+</div>
 
 @code {
     private string? message;
@@ -44,6 +73,8 @@ else
     private IEnumerable<string>? recoveryCodes;
 
     [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,7 +87,7 @@ else
         }
     }
 
-    private async Task OnSubmitAsync()
+    private async Task OnValidSubmitAsync()
     {
         var userId = await UserManager.GetUserIdAsync(user);
         recoveryCodes = await UserManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
@@ -65,4 +96,7 @@ else
         Logger.LogInformation("User with ID '{UserId}' has generated new 2FA recovery codes.", userId);
     }
 
+    private sealed class InputModel
+    {
+    }
 }

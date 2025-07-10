@@ -11,27 +11,55 @@
 
 <PageTitle>Reset authenticator key</PageTitle>
 
-<StatusMessage/>
-<h3>Reset authenticator key</h3>
-<div class="alert alert-warning" role="alert">
-    <p>
-        <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>If you reset your authenticator key your authenticator app will not work until you reconfigure it.</strong>
-    </p>
-    <p>
-        This process disables 2FA until you verify your authenticator app.
-        If you do not complete your authenticator app configuration you may lose access to your account.
-    </p>
-</div>
-<div>
-    <form @formname="reset-authenticator" @onsubmit="OnSubmitAsync" method="post">
-        <AntiforgeryToken/>
-        <button class="btn btn-danger" type="submit">Reset authenticator key</button>
-    </form>
+<div class="text-white">
+    <h1 class="font-semibold text-xl mb-4">Reset authenticator key</h1>
+    
+    <StatusMessage/>
+    
+    <div class="space-y-6">
+        <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <div>
+                    <p class="text-sm font-medium text-yellow-400">Warning</p>
+                    <p class="text-sm text-yellow-300">
+                        <strong>This action will invalidate your authenticator app.</strong> Once you reset your authenticator key, 
+                        your authenticator app will not work until you reconfigure it. This process will disable 2FA until 
+                        you verify your authenticator app. If you do not complete your authenticator configuration you 
+                        may lose access to your account.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-zinc-800 rounded-lg p-4 border border-zinc-600">
+            <h2 class="text-lg font-medium mb-3">Reset Authenticator Key</h2>
+            <p class="text-sm text-zinc-300 mb-4">
+                If you have lost access to your authenticator device or want to change it, you can reset the authenticator key. 
+                This will require you to set up your authenticator app again.
+            </p>
+            
+            <EditForm Model="Input" FormName="reset-authenticator" OnValidSubmit="OnSubmitAsync" method="post">
+                <AntiforgeryToken/>
+                <div class="flex space-x-3">
+                    <a href="Account/Manage/TwoFactorAuthentication" class="flex-1 px-4 py-2 bg-zinc-600 hover:bg-zinc-500 rounded-md text-white font-medium transition-colors text-center">
+                        Cancel
+                    </a>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium transition-colors">
+                        Reset Key
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
 </div>
 
 @code {
     [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
     private async Task OnSubmitAsync()
     {
@@ -49,4 +77,7 @@
             HttpContext);
     }
 
+    private sealed class InputModel
+    {
+    }
 }

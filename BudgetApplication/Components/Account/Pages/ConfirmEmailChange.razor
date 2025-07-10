@@ -11,9 +11,37 @@
 
 <PageTitle>Confirm email change</PageTitle>
 
-<h1>Confirm email change</h1>
-
-<StatusMessage Message="@message"/>
+<div class="flex justify-center items-center sm:min-h-screen overflow-auto mt-6 sm:mt-0">
+    <div class="w-80 bg-zinc-800 inset-ring inset-ring-gray-700/50 rounded-lg shadow-lg p-6 flex flex-col gap-4 justify-center items-center text-white">
+        <h1 class="font-semibold text-2xl">Confirm Email Change</h1>
+        
+        <div class="w-full text-center">
+            @if (message is not null)
+            {
+                <div class="mb-4">
+                    @if (message.Contains("Thank you"))
+                    {
+                        <svg class="mx-auto h-12 w-12 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    }
+                    else
+                    {
+                        <svg class="mx-auto h-12 w-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.232 15.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                    }
+                </div>
+                
+                <p class="text-sm text-zinc-300 mb-6">@message</p>
+            }
+            
+            <p class="text-sm">
+                <a href="Account/Login" class="text-blue-400 hover:text-blue-300 hover:underline">Continue to login</a>
+            </p>
+        </div>
+    </div>
+</div>
 
 @code {
     private string? message;

@@ -11,64 +11,90 @@
 
 <PageTitle>Two-factor authentication (2FA)</PageTitle>
 
-<StatusMessage/>
-<h3>Two-factor authentication (2FA)</h3>
-@if (canTrack)
-{
-    if (is2faEnabled)
-    {
-        if (recoveryCodesLeft == 0)
-        {
-            <div class="alert alert-danger">
-                <strong>You have no recovery codes left.</strong>
-                <p>You must <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</p>
+<div class="text-white">
+    <h1 class="font-semibold text-xl mb-4">Two-factor authentication (2FA)</h1>
+    
+    <StatusMessage/>
+    
+    <div class="space-y-6">
+        <div class="bg-zinc-800 rounded-lg p-4 border border-zinc-600">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-medium">Status</h2>
+                @if (is2faEnabled)
+                {
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Enabled
+                    </span>
+                }
+                else
+                {
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400 border border-red-500/30">
+                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                        Disabled
+                    </span>
+                }
             </div>
-        }
-        else if (recoveryCodesLeft == 1)
-        {
-            <div class="alert alert-danger">
-                <strong>You have 1 recovery code left.</strong>
-                <p>You can <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
+            
+            <p class="text-sm text-zinc-300 mb-4">
+                Two-factor authentication (2FA) adds an extra layer of security to your account. 
+                When enabled, you'll need to provide both your password and a code from your authenticator app to sign in.
+            </p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                @if (is2faEnabled)
+                {
+                    @if (recoveryCodesLeft == 0)
+                    {
+                        <a href="Account/Manage/GenerateRecoveryCodes" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-md text-white font-medium transition-colors text-sm text-center">
+                            Generate recovery codes
+                        </a>
+                    }
+                    else if (recoveryCodesLeft == 1)
+                    {
+                        <a href="Account/Manage/GenerateRecoveryCodes" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-md text-white font-medium transition-colors text-sm text-center">
+                            Generate recovery codes (1 left)
+                        </a>
+                    }
+                    else if (recoveryCodesLeft <= 3)
+                    {
+                        <a href="Account/Manage/GenerateRecoveryCodes" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-md text-white font-medium transition-colors text-sm text-center">
+                            Generate recovery codes (@recoveryCodesLeft left)
+                        </a>
+                    }
+                    
+                    @if (isMachineRemembered)
+                    {
+                        <form method="post" action="Account/Manage/TwoFactorAuthentication">
+                            <AntiforgeryToken/>
+                            <button type="submit" name="action" value="forget-machine" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium transition-colors text-sm">
+                                Forget this browser
+                            </button>
+                        </form>
+                    }
+                    
+                    <a href="Account/Manage/Disable2fa" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium transition-colors text-sm text-center">
+                        Disable 2FA
+                    </a>
+                    
+                    <a href="Account/Manage/ResetAuthenticator" class="px-4 py-2 bg-zinc-600 hover:bg-zinc-500 rounded-md text-white font-medium transition-colors text-sm text-center">
+                        Reset authenticator
+                    </a>
+                }
+                else
+                {
+                    <a href="Account/Manage/EnableAuthenticator" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium transition-colors text-sm text-center">
+                        Enable 2FA
+                    </a>
+                }
             </div>
-        }
-        else if (recoveryCodesLeft <= 3)
-        {
-            <div class="alert alert-warning">
-                <strong>You have @recoveryCodesLeft recovery codes left.</strong>
-                <p>You should <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
-            </div>
-        }
-
-        if (isMachineRemembered)
-        {
-            <form style="display: inline-block" @formname="forget-browser" @onsubmit="OnSubmitForgetBrowserAsync" method="post">
-                <AntiforgeryToken/>
-                <button type="submit" class="btn btn-primary">Forget this browser</button>
-            </form>
-        }
-
-        <a href="Account/Manage/Disable2fa" class="btn btn-primary">Disable 2FA</a>
-        <a href="Account/Manage/GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
-    }
-
-    <h4>Authenticator app</h4>
-    @if (!hasAuthenticator)
-    {
-        <a href="Account/Manage/EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
-    }
-    else
-    {
-        <a href="Account/Manage/EnableAuthenticator" class="btn btn-primary">Set up authenticator app</a>
-        <a href="Account/Manage/ResetAuthenticator" class="btn btn-primary">Reset authenticator app</a>
-    }
-}
-else
-{
-    <div class="alert alert-danger">
-        <strong>Privacy and cookie policy have not been accepted.</strong>
-        <p>You must accept the policy before you can enable two factor authentication.</p>
+        </div>
     </div>
-}
+</div>
 
 @code {
     private bool canTrack;
