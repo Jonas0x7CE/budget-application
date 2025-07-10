@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
-using Budget_Application.Data;
+using BudgetApplication.Data;
 
-namespace Budget_Application.Components.Account;
+namespace BudgetApplication.Components.Account;
 
 internal sealed class IdentityUserAccessor(
     UserManager<ApplicationUser> userManager,

@@ -1,9 +1,10 @@
+using Budget_Application.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Budget_Application.Components;
-using Budget_Application.Components.Account;
-using Budget_Application.Data;
+using BudgetApplication.Components;
+using BudgetApplication.Components.Account;
+using BudgetApplication.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
