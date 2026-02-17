@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using System.Text.Json;
-using Budget_Application.Components.Account.Pages;
-using Budget_Application.Components.Account.Pages.Manage;
+using BudgetApplication.Components.Account.Pages;
+using BudgetApplication.Components.Account.Pages.Manage;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
